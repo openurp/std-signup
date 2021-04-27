@@ -26,7 +26,7 @@ import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.boot.edu.helper.ProjectSupport
 import org.openurp.code.Code
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
-import org.openurp.std.signup.model.{SignupInfo, SignupSetting}
+import org.openurp.std.signup.model.{SignupInfo, SignupOption, SignupSetting}
 
 class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
 
@@ -63,6 +63,18 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
 		}
 	}
 
+	def optionAjax(): View = {
+		val query = OqlBuilder.from(classOf[SignupOption], "option")
+		query.orderBy("option.major.code")
+		getInt("institutionId").foreach(institutionId=>{
+			query.where("option.major.institution.id=:id",institutionId)
+		})
+		populateConditions(query)
+		query.limit(getPageLimit)
+		put("courses", entityDao.search(query))
+		forward("optionsJSON")
+	}
+
 
 	override def editSetting(entity: SignupInfo): Unit = {
 		put("institutions", getCodes(classOf[Institution]))
@@ -71,7 +83,8 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
 		query.where("c.endAt is null or :now between c.beginAt and c.endAt", Instant.now)
 		val settings = entityDao.search(query)
 		settings.foreach(setting => {
-			put("minors", setting.minors)
+			put("options", setting.options)
+			put("optionMap",setting.options.map(x => (x.id.toString, x.major.institution)).toMap)
 			put("setting", settings.head)
 		})
 		super.editSetting(entity)

@@ -25,5 +25,7 @@ class DefaultModule extends BindModule {
 		bind(classOf[SignupAction])
 		bind(classOf[SettingAction])
 		bind(classOf[SignupInfoAction])
+		bind(classOf[MajorAction])
+		bind(classOf[OptionAction])
 	}
 }

@@ -41,10 +41,16 @@ class SignupInfo extends LongId with Coded with Named with Updated {
 	/** 主修专业 */
 	var major: String = _
 
+	/** 绩点 */
+	var gp: Float = _
+
 	/** 学科门类 */
 	var category: DisciplineCategory = _
 
-	/** 辅修专业 */
-	var minor: Major = _
+	/** 辅修专业第一志愿 */
+	var firstOption: SignupOption = _
+
+	/** 辅修专业第二志愿 */
+	var secondOption: Option[SignupOption] = _
 
 }

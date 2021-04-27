@@ -20,21 +20,20 @@ package org.openurp.std.signup.web.action
 
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.base.edu.model.Major
 import org.openurp.boot.edu.helper.ProjectSupport
-import org.openurp.std.signup.model.SignupSetting
+import org.openurp.std.signup.model.{SignupMajor, SignupOption, SignupSetting}
 
-class SettingAction extends RestfulAction[SignupSetting] with ProjectSupport{
+class SettingAction extends RestfulAction[SignupSetting] with ProjectSupport {
 
 	override def editSetting(entity: SignupSetting): Unit = {
-		put("majors", findInProject(classOf[Major],"code"))
+		put("majors", entityDao.getAll(classOf[SignupMajor]))
 		super.editSetting(entity)
 	}
 
-	override def saveAndRedirect(entity:SignupSetting): View = {
-		entity.minors.clear()
-		val minorIds = getAll("minorId2nd", classOf[Long])
-		entity.minors ++= entityDao.find(classOf[Major], minorIds)
+	override def saveAndRedirect(entity: SignupSetting): View = {
+//		entity.options.clear()
+//		val minorIds = getAll("minorId2nd", classOf[Long])
+//		entity.options ++= entityDao.findBy(classOf[SignupOption], "major.id", minorIds).toBuffer
 
 		super.saveAndRedirect(entity)
 	}

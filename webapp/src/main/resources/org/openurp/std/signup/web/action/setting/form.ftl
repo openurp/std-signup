@@ -7,9 +7,9 @@
     [@b.startend label="有效期限"
       name="signupSetting.beginAt,signupSetting.endAt" required="true,false"
       start=signupSetting.beginAt end=signupSetting.endAt format="yyyy-MM-dd HH:mm"/]
-    [@b.select2 label="辅修专业" name1st="majorId1st" name2nd="minorId2nd" style = "height:200px;width:200px"
-    items1st=majors items2nd= signupSetting.minors
-    option="id,name"  required="true" /]
+[#--    [@b.select2 label="辅修专业" name1st="majorId1st" name2nd="minorId2nd" style = "height:200px;width:200px"--]
+[#--    items1st=majors items2nd= signupSetting.options--]
+[#--    option="id,name"  required="true" /]--]
     [@b.formfoot]
       [@b.reset/]&nbsp;&nbsp;[@b.submit value="action.submit"/]
     [/@]
