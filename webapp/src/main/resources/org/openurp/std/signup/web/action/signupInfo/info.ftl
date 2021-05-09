@@ -13,6 +13,10 @@
 			<td class="content">${(signupInfo.name)!}</td>
 		</tr>
 		<tr>
+			<td class="title" width="30%">性别:</td>
+			<td class="content">${(signupInfo.gender.name)!}</td>
+		</tr>
+		<tr>
 			<td class="title" width="30%">身份证号:</td>
 			<td class="content">${(signupInfo.idcard)!}</td>
 		</tr>
@@ -21,8 +25,12 @@
 			<td class="content">${(signupInfo.mobile)!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">学校:</td>
+			<td class="title" width="30%">所在学校:</td>
 			<td class="content">${(signupInfo.institution.name)!}</td>
+		</tr>
+		<tr>
+			<td class="title" width="30%">学科门类:</td>
+			<td class="content">${(signupInfo.category.name)!}</td>
 		</tr>
 		<tr>
 			<td class="title" width="30%">院系:</td>
@@ -37,16 +45,12 @@
 			<td class="content">${(signupInfo.gp)!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">学科门类:</td>
-			<td class="content">${(signupInfo.category.name)!}</td>
-		</tr>
-		<tr>
 			<td class="title" width="30%">第一志愿:</td>
-			<td class="content">${(signupInfo.firstOption.major.name)!} ${(signupInfo.firstOption.major.institution.name)!}</td>
+			<td class="content">${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.firstOption.major.name)!}</td>
 		</tr>
 		<tr>
 			<td class="title" width="30%">第二志愿:</td>
-			<td class="content">${(signupInfo.secondOption.major.name)!} ${(signupInfo.firstOption.major.institution.name)!}</td>
+			<td class="content">${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.secondOption.major.name)!}</td>
 		</tr>
 	</table>
 [@b.foot/]

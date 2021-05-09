@@ -14,5 +14,6 @@
       [@b.reset/]&nbsp;&nbsp;[@b.submit value="action.submit"/]
     [/@]
   [/@]
+  <div style="height:300px"></div>
 [/@]
 [@b.foot/]

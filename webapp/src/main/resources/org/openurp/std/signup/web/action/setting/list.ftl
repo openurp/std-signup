@@ -23,7 +23,7 @@
     [@b.col width="10%" property="grade" title="年级"/]
     [@b.col width="20%" property="beginAt" title="生效时间"]${(signupSetting.beginAt?string("yyyy-MM-dd HH:mm"))!}[/@]
     [@b.col width="20%" property="endAt" title="失效时间"]${(signupSetting.endAt?string("yyyy-MM-dd HH:mm"))!}[/@]
-    [@b.col width="45%" title="可选辅修专业列表"][#list signupSetting.options! as option]${option.major.name!}[#if option_has_next],[/#if][/#list][/@]
+    [@b.col width="45%" title="可选辅修专业列表"][#list signupSetting.options?sort_by(["major","institution","name"]) as option]${option.major.institution.name!} ${option.major.name!}[#if option_has_next]<br>[/#if][/#list][/@]
   [/@]
 [/@]
 [@b.form name="signupSettingForm" action=""/]

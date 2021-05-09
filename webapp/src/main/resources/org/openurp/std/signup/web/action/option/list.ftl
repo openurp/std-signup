@@ -9,8 +9,8 @@
   [@b.row]
     <input type="hidden" name="signupSetting.id" value="${signupSettingId!}">
     [@b.boxcol /]
-    [@b.col width="25%" property="major.name" title="专业名称"/]
     [@b.col width="25%" property="major.institution.name" title="所属院校"/]
+    [@b.col width="25%" property="major.name" title="专业名称"/]
     [@b.col width="15%" property="setting.grade" title="年级"/]
     [@b.col width="15%" property="maxCount" title="计划人数"/]
     [@b.col width="15%" property="curCount" title="报名人数"/]
