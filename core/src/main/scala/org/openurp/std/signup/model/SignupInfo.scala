@@ -23,12 +23,16 @@ import org.beangle.data.model.pojo.{Coded, Named, Updated}
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
 import org.openurp.code.person.model.Gender
 
+import java.time.LocalDate
+
 
 class SignupInfo extends LongId with Coded with Named with Updated {
 
   /** 性别 */
   var gender: Gender = _
 
+  /** 出生日期 */
+  var birthday: LocalDate = _
   /** 身份证号 */
   var idcard: String = _
 
@@ -44,8 +48,14 @@ class SignupInfo extends LongId with Coded with Named with Updated {
   /** 主修专业 */
   var major: String = _
 
+  /** 班级 */
+  var squad: Option[String] = None
+
+  /** 地址 */
+  var address: Option[String] = None
+
   /** 绩点 */
-  var gp: Float = _
+  var gpa: Float = _
 
   /** 学科门类 */
   var category: DisciplineCategory = _

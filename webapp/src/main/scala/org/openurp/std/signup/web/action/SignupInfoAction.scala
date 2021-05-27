@@ -19,7 +19,7 @@
 package org.openurp.std.signup.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
 import org.openurp.std.signup.model.SignupInfo
 

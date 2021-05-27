@@ -21,7 +21,7 @@ package org.openurp.std.signup.web.action
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.code.edu.model.Institution
 import org.openurp.std.signup.model.{SignupMajor, SignupOption, SignupSetting}
 

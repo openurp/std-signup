@@ -1,69 +1,66 @@
 [#ftl/]
 [@b.head/]
-<div class="xq_list m_t_20">
-	<table style="width: 500px;margin: 0 auto;">
+<div class="container-md" style="margin-top: 100px">
+<div class="card card-info card-outline">
+ <div class="card-header">
+    <i class="fas fa-school"></i>&nbsp;辅修专业报名信息</span>
+ </div>
+ <div class="card-body">
+	<table class="infoTable">
 		<tr>
-			<td class="title" width="30%">学号:</td>
+			<td class="title" width="20%">学号:</td>
 			<td class="content">${(signupInfo.code)!}</td>
-		</tr>
-		<tr>
-			<td class="title" width="30%">姓名:</td>
+			<td class="title" width="20%" >姓名:</td>
 			<td class="content">${(signupInfo.name)!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">性别:</td>
+			<td class="title" >性别:</td>
 			<td class="content">${(signupInfo.gender.name)!}</td>
+			<td class="title" >出生年月:</td>
+			<td class="content">${(signupInfo.birthday?string('yyyy-MM-dd'))!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">身份证号:</td>
+			<td class="title" >身份证号:</td>
 			<td class="content">${(signupInfo.idcard)!}</td>
-		</tr>
-		<tr>
-			<td class="title" width="30%">电话:</td>
+			<td class="title" >电话:</td>
 			<td class="content">${(signupInfo.mobile)!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">所在学校:</td>
+			<td class="title" >联系地址:</td>
+			<td class="content" colspan="3">${(signupInfo.address)!}</td>
+		</tr>
+		<tr>
+			<td class="title" >所在学校:</td>
 			<td class="content">${(signupInfo.institution.name)!}</td>
-		</tr>
-		<tr>
-			<td class="title" width="30%">学科门类:</td>
-			<td class="content">${(signupInfo.category.name)!}</td>
-		</tr>
-		<tr>
-			<td class="title" width="30%">院系:</td>
+			<td class="title" >院系:</td>
 			<td class="content">${(signupInfo.department)!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">主修专业:</td>
+			<td class="title" >学科门类:</td>
+			<td class="content">${(signupInfo.category.name)!}</td>
+			<td class="title" >主修专业:</td>
 			<td class="content">${(signupInfo.major)!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">绩点:</td>
-			<td class="content">${(signupInfo.gp)!}</td>
+			<td class="title" >班级:</td>
+			<td class="content">${(signupInfo.squad)!}</td>
+			<td class="title" >绩点:</td>
+			<td class="content">${(signupInfo.gpa)!}</td>
 		</tr>
 		<tr>
-			<td class="title" width="30%">第一志愿:</td>
-			<td class="content">${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.firstOption.major.name)!} </td>
-		</tr>
-		<tr>
-			<td class="title" width="30%">第二志愿:</td>
+			<td class="title" >[#if signupInfo.secondOption??]第一志愿:[#else]报名专业[/#if]</td>
+			<td class="content" [#if !signupInfo.secondOption??]colspan="3"[/#if]>${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.firstOption.major.name)!} </td>
+		[#if signupInfo.secondOption??]
+			<td class="title" >第二志愿:</td>
 			<td class="content">${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.secondOption.major.name)!}</td>
 		</tr>
+		[/#if]
 	</table>
 	<div style="text-align:center;margin-top: 20px">
 			[@b.a class="btn btn-default" href="!edit?id=" +signupInfo.id role="button"]修改[/@]
 			[@b.a class="btn btn-default" href="!index" role="button"]返回[/@]
 	</div>
-</div>
-
-<style>
-	.xq_list{ padding:30px 30px;}
-	.xq_list table{ border:1px solid #e1e1e1; background:#fff;}
-	.xq_list table tr td{ padding:5px; color:#826d4c; line-height:24px; word-break: break-all}
-	.xq_list table tr td:first-child{ background:#faf4eb; color:#333; font-weight:bold;}
-	.xq_list table tr{ border-bottom:1px solid #e1e1e1;}
-	.xq_list table tr td p {color: #826d4c;}
-	.m_t_20{ margin-top:100px;}
-</style>
+ </div>
+	</div>
+ </div>
 [@b.foot/]

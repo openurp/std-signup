@@ -20,7 +20,7 @@ package org.openurp.std.signup.web.action
 
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.signup.model.{SignupMajor, SignupOption, SignupSetting}
 
 class SettingAction extends RestfulAction[SignupSetting] with ProjectSupport {

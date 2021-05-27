@@ -1,28 +1,46 @@
 [#ftl]
 [@b.head/]
-<div style="margin-top: 100px">
+<div class="container-md" style="margin-top: 100px">
+<div class="card card-info card-outline">
+ <div class="card-header">
+    <i class="fas fa-school"></i>&nbsp;${project.school.name} 辅修专业报名<span style="font-size:0.8em">(${setting.beginAt?string("MM-dd HH:mm")}~${(setting.endAt?string("MM-dd HH:mm"))!})</span>
+ </div>
+ <div class="card-body">
 	[#if setting ??]
 		<div style="width: 600px;margin: 0 auto;">
       [@b.form action=b.rest.save(signupInfo) theme="list" onsubmit="syncEditor" title="辅修专业报名" name="signupInfoForm"]
           [@b.textfield name="signupInfo.code" label="学号" value="${signupInfo.code!}" required="true"/]
           [@b.textfield name="signupInfo.name" label="姓名" value="${signupInfo.name!}" required="true"/]
           [@b.select name="signupInfo.gender.id" label="性别" value=signupInfo.gender! style="width:200px;" items=genders option="id,name" empty="..."  required="true"/]
+          [@b.date name="signupInfo.birthday" label="出生年月" value=signupInfo.birthday!  required="true"/]
           [@b.textfield name="signupInfo.idcard" label="身份证号" value="${signupInfo.idcard!}" required="true"
              id="signupInfo.idcard" onblur="userAjax(this.value)" maxlength="18" comment='<span id="idcardSpan"></span>'/]
           [@b.textfield id="signupInfo.mobile" name="signupInfo.mobile" label="手机电话" maxlength="11" value="${signupInfo.mobile!}" required="true"/]
+          [@b.textfield id="signupInfo.address" name="signupInfo.address" label="联系地址" maxlength="200" style="width:300px" value="${signupInfo.address!}" required="true"/]
           [@b.select name="signupInfo.institution.id" label="所在学校" value=signupInfo.institution!
             style="width:200px;" items=institutions option="id,name" empty="..."  required="true"/]
           [@b.textfield name="signupInfo.department" label="院系" value="${signupInfo.department!}" required="true"/]
           [@b.select name="signupInfo.category.id" label="主修学科门类" value="${(signupInfo.category.id)!}"
           style="width:200px;" items=categories option="id,name" empty="..."  required="true"/]
           [@b.textfield name="signupInfo.major" label="主修专业" value="${signupInfo.major!}" required="true"/]
-          [@b.textfield name="signupInfo.gp" id="signupInfo.gp" label="绩点" value="${signupInfo.gp!}" required="true"/]
+          [@b.textfield name="signupInfo.squad" label="所在班级" value="${signupInfo.squad!}" required="true"/]
+          [@b.textfield name="signupInfo.gpa" id="signupInfo.gpa" label="绩点" value=signupInfo.gpa! required="true"/]
+
+        [#if setting.options?size==1]
+          [@b.field label="报名专业"]
+             <input type="hidden" id="firstOption" name="institution.id" value="${setting.options?first.major.institution.id}"/>
+             <input type="hidden" id="secondOption" name="signupInfo.secondOption.id" value=""/>
+             <input type="hidden" name="signupInfo.firstOption.id" value="${setting.options?first.id}"/>
+             ${(setting.options?first.major.institution.name)!} ${setting.options?first.major.name}
+          [/@]
+        [#else]
           [@b.select name="institution.id" id="institution" label="报名院校" value=(signupInfo.firstOption.major.institution)!
              style="width:200px;" items=institutions option="id,name" empty="..."  required="true" /]
           [@b.select name="signupInfo.firstOption.id" id="firstOption" label="第一志愿" value="${(signupInfo.firstOption.id)!}"
           style="width:200px;" items=options option=r" ${(item.major.institution.name)} ${(item.major.name)}" empty="..."  required="true"/]
 					[@b.select name="signupInfo.secondOption.id" id="secondOption" label="第二志愿" value="${(signupInfo.secondOption.id)!}"
 					style="width:200px;" items=options option=r"${(item.major.institution.name)} ${(item.major.name)}" empty="..." /]
+        [/#if]
           [@b.formfoot]
               [@b.reset/]&nbsp;&nbsp;[@b.submit value="action.submit" /]&nbsp;&nbsp;
               [@b.a class="btn btn-default" href="!index" role="button" style="padding: .25rem .5rem; font-size: .875rem; line-height: 1.5; border-radius: .2rem;background:none;border-color:#000;width: 60px;"]返回[/@]
@@ -35,8 +53,9 @@
         [@b.a class="btn btn-default" href="!index" role="button" style="padding: .25rem .5rem; font-size: .875rem; line-height: 1.5; border-radius: .2rem;background:none;border-color:#000;width: 60px;"]返回[/@]
 		</div>
 	[/#if]
+	</div>
 </div>
-[@b.foot/]
+</div>
 
 <script>
 	beangle.load(["chosen", "bui-ajaxchosen"], function () {
@@ -88,8 +107,8 @@
 		  alert("手机格式不合法");
 		  return false;
 		}
-		var gp = document.getElementById("signupInfo.gp").value;
-		if(gp>4.0){
+		var gpa = document.getElementById("signupInfo.gpa").value;
+		if(gpa>4.0){
 			alert("绩点不得大于4.0");
 			return false;
 		}
@@ -134,3 +153,4 @@
 	}
 </script>
 
+[@b.foot/]
