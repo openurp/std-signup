@@ -25,7 +25,6 @@ import org.openurp.code.person.model.Gender
 
 import java.time.LocalDate
 
-
 class SignupInfo extends LongId with Coded with Named with Updated {
 
   /** 性别 */

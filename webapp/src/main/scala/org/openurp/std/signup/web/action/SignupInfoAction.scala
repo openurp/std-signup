@@ -25,10 +25,10 @@ import org.openurp.std.signup.model.SignupInfo
 
 class SignupInfoAction extends RestfulAction[SignupInfo] with ProjectSupport{
 
-	override def indexSetting(): Unit = {
-		put("institutions", getCodes(classOf[Institution]))
-		put("categories", getCodes(classOf[DisciplineCategory]))
-		super.indexSetting()
-	}
+  override def indexSetting(): Unit = {
+    put("institutions", getCodes(classOf[Institution]))
+    put("categories", getCodes(classOf[DisciplineCategory]))
+    super.indexSetting()
+  }
 
 }

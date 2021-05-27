@@ -25,10 +25,10 @@ import org.openurp.base.edu.model.Major
 
 class SignupSetting extends IntId with TemporalAt with Updated {
 
-	/** 年级 */
-	var grade: String = _
+  /** 年级 */
+  var grade: String = _
 
-	/** 可报专业 */
-	var options = Collections.newBuffer[SignupOption]
+  /** 可报专业 */
+  var options = Collections.newBuffer[SignupOption]
 
 }

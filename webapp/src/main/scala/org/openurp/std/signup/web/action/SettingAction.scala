@@ -25,17 +25,17 @@ import org.openurp.std.signup.model.{SignupMajor, SignupOption, SignupSetting}
 
 class SettingAction extends RestfulAction[SignupSetting] with ProjectSupport {
 
-	override def editSetting(entity: SignupSetting): Unit = {
-		put("majors", entityDao.getAll(classOf[SignupMajor]))
-		super.editSetting(entity)
-	}
+  override def editSetting(entity: SignupSetting): Unit = {
+    put("majors", entityDao.getAll(classOf[SignupMajor]))
+    super.editSetting(entity)
+  }
 
-	override def saveAndRedirect(entity: SignupSetting): View = {
-//		entity.options.clear()
-//		val minorIds = getAll("minorId2nd", classOf[Long])
-//		entity.options ++= entityDao.findBy(classOf[SignupOption], "major.id", minorIds).toBuffer
+  override def saveAndRedirect(entity: SignupSetting): View = {
+//    entity.options.clear()
+//    val minorIds = getAll("minorId2nd", classOf[Long])
+//    entity.options ++= entityDao.findBy(classOf[SignupOption], "major.id", minorIds).toBuffer
 
-		super.saveAndRedirect(entity)
-	}
+    super.saveAndRedirect(entity)
+  }
 
 }

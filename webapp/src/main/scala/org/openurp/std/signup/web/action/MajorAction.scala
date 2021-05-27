@@ -25,14 +25,14 @@ import org.openurp.std.signup.model.SignupMajor
 
 class MajorAction extends RestfulAction[SignupMajor] with ProjectSupport{
 
-	override def indexSetting(): Unit = {
-		put("institutions",getCodes(classOf[Institution]))
-		super.indexSetting()
-	}
+  override def indexSetting(): Unit = {
+    put("institutions",getCodes(classOf[Institution]))
+    super.indexSetting()
+  }
 
-	override def editSetting(entity: SignupMajor): Unit = {
-		put("institutions",getCodes(classOf[Institution]))
-		super.editSetting(entity)
-	}
+  override def editSetting(entity: SignupMajor): Unit = {
+    put("institutions",getCodes(classOf[Institution]))
+    super.editSetting(entity)
+  }
 
 }

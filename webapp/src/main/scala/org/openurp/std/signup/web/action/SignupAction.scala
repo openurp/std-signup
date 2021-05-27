@@ -77,7 +77,6 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
     forward("optionsJSON")
   }
 
-
   override def editSetting(entity: SignupInfo): Unit = {
     put("categories", getCodes(classOf[DisciplineCategory]))
     val query = OqlBuilder.from(classOf[SignupSetting], "c")
