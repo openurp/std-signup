@@ -1,5 +1,6 @@
 [#ftl]
 [@b.head/]
+[#if setting??]
 <div class="container-md" style="margin-top: 100px">
 <div class="card card-info card-outline">
  <div class="card-header">
@@ -151,5 +152,7 @@
     }
   }
 </script>
-
+[#else]
+<p>报名尚未开始</p>
+[/#if]
 [@b.foot/]

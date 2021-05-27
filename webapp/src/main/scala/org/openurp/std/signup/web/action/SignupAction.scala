@@ -23,9 +23,9 @@ import org.beangle.webmvc.api.annotation.response
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.Project
-import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.code.edu.model.DisciplineCategory
 import org.openurp.code.person.model.Gender
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.signup.model.{SignupInfo, SignupOption, SignupSetting}
 
 import java.time.Instant
@@ -36,6 +36,9 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
     get("alert").foreach(alert => {
       put("alert", alert)
     })
+    getSetting foreach { s =>
+      put("setting", s)
+    }
     super.indexSetting()
   }
 
@@ -77,18 +80,21 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
     forward("optionsJSON")
   }
 
-  override def editSetting(entity: SignupInfo): Unit = {
-    put("categories", getCodes(classOf[DisciplineCategory]))
+  private def getSetting: Option[SignupSetting] = {
     val query = OqlBuilder.from(classOf[SignupSetting], "c")
     query.where("c.endAt is null or :now between c.beginAt and c.endAt", Instant.now)
-    val settings = entityDao.search(query)
-    settings.foreach { setting =>
+    entityDao.search(query).headOption
+  }
+
+  override def editSetting(entity: SignupInfo): Unit = {
+    put("categories", getCodes(classOf[DisciplineCategory]))
+    getSetting foreach { setting =>
       put("institutions", setting.options.map(_.major.institution).distinct)
       put("options", setting.options)
       put("genders", getCodes(classOf[Gender]))
       put("setting", setting)
     }
-    put("project",entityDao.getAll(classOf[Project]).head)
+    put("project", entityDao.getAll(classOf[Project]).head)
     super.editSetting(entity)
   }
 
