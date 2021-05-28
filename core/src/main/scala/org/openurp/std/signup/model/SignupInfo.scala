@@ -27,6 +27,7 @@ import java.time.LocalDate
 
 class SignupInfo extends LongId with Coded with Named with Updated {
 
+  var setting: SignupSetting = _
   /** 性别 */
   var gender: Gender = _
 
@@ -34,34 +35,24 @@ class SignupInfo extends LongId with Coded with Named with Updated {
   var birthday: LocalDate = _
   /** 身份证号 */
   var idcard: String = _
-
   /** 电话 */
   var mobile: String = _
-
   /** 学校 */
   var institution: Institution = _
-
   /** 院系 */
   var department: String = _
-
   /** 主修专业 */
   var major: String = _
-
   /** 班级 */
   var squad: Option[String] = None
-
   /** 地址 */
   var address: Option[String] = None
-
   /** 绩点 */
   var gpa: Float = _
-
   /** 学科门类 */
   var category: DisciplineCategory = _
-
   /** 辅修专业第一志愿 */
   var firstOption: SignupOption = _
-
   /** 辅修专业第二志愿 */
   var secondOption: Option[SignupOption] = _
 
