@@ -25,8 +25,8 @@ class DefaultMapping extends MappingModule {
   def binding(): Unit = {
 
     bind[SignupInfo] declare { e =>
-      index("",false,e.setting)
-      index("", true, e.setting, e.code, e.idcard)
+      index("", false, e.setting)
+      index("", true, e.setting, e.idcard)
     }
 
     bind[SignupSetting] declare { e =>
