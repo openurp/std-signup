@@ -29,7 +29,6 @@ import org.openurp.code.person.model.Gender
 import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.signup.model.{SignupInfo, SignupOption, SignupSetting}
 import org.openurp.std.signup.web.helper.DocHelper
-import org.openurp.std.signup.web.helper.DocHelper.ApplicationUrl
 
 import java.time.Instant
 
@@ -74,7 +73,7 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
 
   @mapping(value = "{id}")
   override def info(id: String): View = {
-    put("downloadApplication", EmsApp.getFile(ApplicationUrl).nonEmpty)
+    put("downloadApplication", DocHelper.getApplicationFile.nonEmpty)
     super.info(id)
   }
 
@@ -112,7 +111,7 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
     val signupInfo = entityDao.get(classOf[SignupInfo], longId("signupInfo"))
     val bytes = DocHelper.toDoc(signupInfo)
     val filename = new String(signupInfo.code.getBytes, "ISO8859-1")
-    response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
+    response.setHeader("Content-disposition", "attachment; filename=" + filename + "辅修专业申请表.docx")
     response.setHeader("Content-Length", bytes.length.toString)
     val out = response.getOutputStream
     out.write(bytes)

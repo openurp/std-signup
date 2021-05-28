@@ -20,15 +20,23 @@ package org.openurp.std.signup.web.helper
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.beangle.commons.collection.Collections
-import org.beangle.ems.app.EmsApp
+import org.beangle.commons.net.http.HttpUtils
+import org.beangle.ems.app.{Ems, EmsApp}
 import org.openurp.std.signup.model.SignupInfo
 
 import java.io.ByteArrayOutputStream
 import java.net.URL
 
 object DocHelper {
-
-  val ApplicationUrl = "application.docx"
+  def getApplicationFile: Option[URL] = {
+    val url = new URL(s"${Ems.api}/platform/config/files/${EmsApp.name}/org/openurp/std/signup/application.docx")
+    val status = HttpUtils.access(url)
+    if (status.isOk) {
+      Some(url)
+    } else {
+      None
+    }
+  }
 
   def toDoc(apply: SignupInfo): Array[Byte] = {
     val data = Collections.newMap[String, String]
@@ -37,15 +45,18 @@ object DocHelper {
     data.put("name", apply.name)
     data.put("mobile", apply.mobile)
     data.put("gender", apply.gender.name)
+    data.put("idcard", apply.idcard)
     data.put("address", apply.address.getOrElse(""))
     data.put("birthday", apply.birthday.toString)
 
     data.put("depart", apply.department)
     data.put("major", apply.major)
+    data.put("disciplineCategory", apply.category.name)
     data.put("squad", apply.squad.getOrElse(""))
 
+    data.put("institution", apply.firstOption.major.institution.name)
     data.put("firstMajor", apply.firstOption.major.name)
-    data.put("firstMajor", apply.secondOption.map(_.major.name).getOrElse(""))
+    data.put("secondMajor", apply.secondOption.map(_.major.name).getOrElse(""))
 
     import java.text.NumberFormat
     val nf = NumberFormat.getNumberInstance
@@ -53,8 +64,7 @@ object DocHelper {
     nf.setMaximumFractionDigits(2)
     data.put("gpa", nf.format(apply.gpa))
 
-    val url = EmsApp.getFile(ApplicationUrl).get.toURI.toURL
-    DocHelper.toDoc(url, data)
+    DocHelper.toDoc(getApplicationFile.get, data)
   }
 
   private def toDoc(url: URL, data: collection.Map[String, String]): Array[Byte] = {
