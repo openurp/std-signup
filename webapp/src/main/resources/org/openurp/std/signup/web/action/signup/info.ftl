@@ -57,7 +57,10 @@
     [/#if]
   </table>
   <div style="text-align:center;margin-top: 20px">
-      [@b.a class="btn btn-default" href="!edit?id=" +signupInfo.id role="button"]修改[/@]
+      [#if downloadApplication]
+        [@b.a class="btn btn-success" href="!download?signupInfo.id=" +signupInfo.id role="button"]下载申请表[/@]
+      [/#if]
+      [@b.a class="btn btn-primary" href="!edit?id=" +signupInfo.id role="button"]修改[/@]
       [@b.a class="btn btn-default" href="!index" role="button"]返回[/@]
   </div>
  </div>

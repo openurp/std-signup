@@ -19,7 +19,8 @@
 package org.openurp.std.signup.web.action
 
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.api.annotation.response
+import org.beangle.ems.app.EmsApp
+import org.beangle.webmvc.api.annotation.{mapping, response}
 import org.beangle.webmvc.api.view.View
 import org.beangle.webmvc.entity.action.RestfulAction
 import org.openurp.base.edu.model.Project
@@ -27,6 +28,8 @@ import org.openurp.code.edu.model.DisciplineCategory
 import org.openurp.code.person.model.Gender
 import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.std.signup.model.{SignupInfo, SignupOption, SignupSetting}
+import org.openurp.std.signup.web.helper.DocHelper
+import org.openurp.std.signup.web.helper.DocHelper.ApplicationUrl
 
 import java.time.Instant
 
@@ -68,6 +71,13 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
     }
   }
 
+
+  @mapping(value = "{id}")
+  override def info(id: String): View = {
+    put("downloadApplication", EmsApp.getFile(ApplicationUrl).nonEmpty)
+    super.info(id)
+  }
+
   def optionAjax(): View = {
     val query = OqlBuilder.from(classOf[SignupOption], "option")
     query.orderBy("option.major.name")
@@ -96,6 +106,19 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
     }
     put("project", entityDao.getAll(classOf[Project]).head)
     super.editSetting(entity)
+  }
+
+  def download(): View = {
+    val signupInfo = entityDao.get(classOf[SignupInfo], longId("signupInfo"))
+    val bytes = DocHelper.toDoc(signupInfo)
+    val filename = new String(signupInfo.code.getBytes, "ISO8859-1")
+    response.setHeader("Content-disposition", "attachment; filename=" + filename + ".docx")
+    response.setHeader("Content-Length", bytes.length.toString)
+    val out = response.getOutputStream
+    out.write(bytes)
+    out.flush()
+    out.close()
+    null
   }
 
   override def saveAndRedirect(entity: SignupInfo): View = {
