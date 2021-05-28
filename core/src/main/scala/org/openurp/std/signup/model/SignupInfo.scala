@@ -20,31 +20,40 @@ package org.openurp.std.signup.model
 
 import org.beangle.data.model.LongId
 import org.beangle.data.model.pojo.{Coded, Named, Updated}
-import org.openurp.base.edu.model.Major
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
+import org.openurp.code.person.model.Gender
 
+import java.time.LocalDate
 
 class SignupInfo extends LongId with Coded with Named with Updated {
 
-	/** 身份证号 */
-	var idcard: String = _
+  var setting: SignupSetting = _
+  /** 性别 */
+  var gender: Gender = _
 
-	/** 电话 */
-	var mobile: String = _
-
-	/** 学校 */
-	var institution: Institution = _
-
-	/** 院系 */
-	var department: String = _
-
-	/** 主修专业 */
-	var major: String = _
-
-	/** 学科门类 */
-	var category: DisciplineCategory = _
-
-	/** 辅修专业 */
-	var minor: Major = _
+  /** 出生日期 */
+  var birthday: LocalDate = _
+  /** 身份证号 */
+  var idcard: String = _
+  /** 电话 */
+  var mobile: String = _
+  /** 学校 */
+  var institution: Institution = _
+  /** 院系 */
+  var department: String = _
+  /** 主修专业 */
+  var major: String = _
+  /** 班级 */
+  var squad: Option[String] = None
+  /** 地址 */
+  var address: Option[String] = None
+  /** 绩点 */
+  var gpa: Float = _
+  /** 学科门类 */
+  var category: DisciplineCategory = _
+  /** 辅修专业第一志愿 */
+  var firstOption: SignupOption = _
+  /** 辅修专业第二志愿 */
+  var secondOption: Option[SignupOption] = _
 
 }

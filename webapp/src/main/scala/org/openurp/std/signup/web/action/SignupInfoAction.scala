@@ -19,16 +19,17 @@
 package org.openurp.std.signup.web.action
 
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.boot.edu.helper.ProjectSupport
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
-import org.openurp.std.signup.model.SignupInfo
+import org.openurp.std.signup.model.{SignupInfo, SignupSetting}
 
 class SignupInfoAction extends RestfulAction[SignupInfo] with ProjectSupport{
 
-	override def indexSetting(): Unit = {
-		put("institutions", getCodes(classOf[Institution]))
-		put("categories", getCodes(classOf[DisciplineCategory]))
-		super.indexSetting()
-	}
+  override def indexSetting(): Unit = {
+    put("institutions", getCodes(classOf[Institution]))
+    put("categories", getCodes(classOf[DisciplineCategory]))
+    put("settings",entityDao.getAll(classOf[SignupSetting]))
+    super.indexSetting()
+  }
 
 }

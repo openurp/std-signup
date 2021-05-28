@@ -13,8 +13,8 @@
     [/@]
   </div>
   <div style="margin-top: 20px;">
-    <button class="btn btn-default" onclick="checkInfo(this.form)" >查询</button>
-     [@b.a class="btn btn-default" href="!editNew"]直接报名[/@]
+    <button class="btn btn-default" onclick="checkInfo(this.form)">查询</button>
+     [#if setting??][@b.a class="btn btn-default" href="!editNew"]直接报名[/@][/#if]
   </div>
 </div>
 

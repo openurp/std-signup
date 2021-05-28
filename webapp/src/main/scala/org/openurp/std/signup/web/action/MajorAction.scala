@@ -16,16 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.openurp.std.signup.model
+package org.openurp.std.signup.web.action
 
-import org.beangle.data.model.LongId
-import org.beangle.data.model.pojo.{Named, TemporalOn}
+import org.beangle.webmvc.entity.action.RestfulAction
+import org.openurp.starter.edu.helper.ProjectSupport
 import org.openurp.code.edu.model.Institution
+import org.openurp.std.signup.model.SignupMajor
 
-/**
- * 可报名专业
- */
-class SignupMajor extends LongId with Named with TemporalOn {
+class MajorAction extends RestfulAction[SignupMajor] with ProjectSupport{
 
-  var institution: Institution = _
+  override def indexSetting(): Unit = {
+    put("institutions",getCodes(classOf[Institution]))
+    super.indexSetting()
+  }
+
+  override def editSetting(entity: SignupMajor): Unit = {
+    put("institutions",getCodes(classOf[Institution]))
+    super.editSetting(entity)
+  }
+
 }

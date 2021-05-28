@@ -1,11 +1,12 @@
-[#ftl/]
+[#ftl]
 [@b.head/]
-<div class="container-md" style="margin-top: 100px">
+[@b.toolbar title="辅修信息"]
+  bar.addBack("${b.text("action.back")}");
+[/@]
 <div class="card card-info card-outline">
  <div class="card-header">
     <i class="fas fa-school"></i>&nbsp;辅修专业报名信息</span>
  </div>
- <div class="card-body">
   <table class="infoTable">
     <tr>
       <td class="title" width="20%">学号:</td>
@@ -57,13 +58,8 @@
     [/#if]
   </table>
   <div style="text-align:center;margin-top: 20px">
-      [#if downloadApplication]
-        [@b.a class="btn btn-success" href="!download?signupInfo.id=" +signupInfo.id role="button"]<i class="fas fa-download"></i>下载申请表[/@]&nbsp;
-      [/#if]
-      [@b.a class="btn btn-primary" href="!edit?id=" +signupInfo.id role="button"]<i class="fas fa-edit"></i>修改[/@]&nbsp;
-      [@b.a class="btn btn-default" href="!index" role="button"]<i class="fas fa-backward"></i>返回[/@]
+      [@b.a class="btn btn-default" href="!edit?id=" +signupInfo.id role="button"]修改[/@]
+      [@b.a class="btn btn-default" href="!index" role="button"]返回[/@]
   </div>
- </div>
   </div>
- </div>
 [@b.foot/]

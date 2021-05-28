@@ -18,68 +18,106 @@
  */
 package org.openurp.std.signup.web.action
 
-import java.time.{Instant, LocalDate}
+import org.beangle.commons.activation.MediaTypes
 import org.beangle.data.dao.OqlBuilder
-import org.beangle.webmvc.api.annotation.response
-import org.beangle.webmvc.api.view.View
+import org.beangle.webmvc.api.annotation.{mapping, response}
+import org.beangle.webmvc.api.view.{Stream, View}
 import org.beangle.webmvc.entity.action.RestfulAction
-import org.openurp.boot.edu.helper.ProjectSupport
-import org.openurp.code.Code
-import org.openurp.code.edu.model.{DisciplineCategory, Institution}
-import org.openurp.std.signup.model.{SignupInfo, SignupSetting}
+import org.openurp.base.edu.model.Project
+import org.openurp.code.edu.model.DisciplineCategory
+import org.openurp.code.person.model.Gender
+import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.std.signup.model.{SignupInfo, SignupOption, SignupSetting}
+import org.openurp.std.signup.web.helper.DocHelper
+
+import java.io.ByteArrayInputStream
+import java.time.Instant
 
 class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
 
-	override def indexSetting(): Unit = {
-		get("alert").foreach(alert => {
-			put("alert", alert)
-		})
-		super.indexSetting()
-	}
+  override def indexSetting(): Unit = {
+    get("alert").foreach(alert => {
+      put("alert", alert)
+    })
+    getSetting foreach { s =>
+      put("setting", s)
+    }
+    super.indexSetting()
+  }
 
-	def checkInfo(): View = {
-		val signupInfos = entityDao.search(getQueryBuilder)
-		if (signupInfos.isEmpty) {
-			redirect("index", s"&alert=" + true, null)
-		} else {
-			redirect("info", s"&id=${signupInfos.head.id}", null)
-		}
-	}
+  def checkInfo(): View = {
+    val signupInfos = entityDao.search(getQueryBuilder)
+    if (signupInfos.isEmpty) {
+      redirect("index", s"&alert=" + true, null)
+    } else {
+      redirect("info", s"&id=${signupInfos.head.id}", null)
+    }
+  }
 
-	@response
-	def userAjax(): Boolean = {
-		val id = getLong("id")
-		val card = get("card").orNull
-		if (card != null && card != "") {
-			val signupInfos = entityDao.findBy(classOf[SignupInfo], "idcard", List(card))
-			if (id.isEmpty) {
-				if (signupInfos.isEmpty) false else true
-			} else {
-				val newSignupInfos = signupInfos.filter(e => e.id != id.get)
-				if (newSignupInfos.isEmpty) false else true
-			}
-		} else {
-			false
-		}
-	}
+  @response
+  def userAjax(): Boolean = {
+    val id = getLong("id")
+    val card = get("card").orNull
+    if (card != null && card != "") {
+      val signupInfos = entityDao.findBy(classOf[SignupInfo], "idcard", List(card))
+      if (id.isEmpty) {
+        if (signupInfos.isEmpty) false else true
+      } else {
+        val newSignupInfos = signupInfos.filter(e => e.id != id.get)
+        if (newSignupInfos.isEmpty) false else true
+      }
+    } else {
+      false
+    }
+  }
 
 
-	override def editSetting(entity: SignupInfo): Unit = {
-		put("institutions", getCodes(classOf[Institution]))
-		put("categories", getCodes(classOf[DisciplineCategory]))
-		val query = OqlBuilder.from(classOf[SignupSetting], "c")
-		query.where("c.endAt is null or :now between c.beginAt and c.endAt", Instant.now)
-		val settings = entityDao.search(query)
-		settings.foreach(setting => {
-			put("minors", setting.minors)
-			put("setting", settings.head)
-		})
-		super.editSetting(entity)
-	}
+  @mapping(value = "{id}")
+  override def info(id: String): View = {
+    put("downloadApplication", DocHelper.getApplicationFile.nonEmpty)
+    super.info(id)
+  }
 
-	override def saveAndRedirect(entity: SignupInfo): View = {
-		saveOrUpdate(entity)
-		redirect("info", s"&id=${entity.id}", "info.save.success")
-	}
+  def optionAjax(): View = {
+    val query = OqlBuilder.from(classOf[SignupOption], "option")
+    query.orderBy("option.major.name")
+    getInt("institutionId").foreach(institutionId => {
+      query.where("option.major.institution.id=:id", institutionId)
+    })
+    populateConditions(query)
+    query.limit(getPageLimit)
+    put("options", entityDao.search(query))
+    forward("optionsJSON")
+  }
+
+  private def getSetting: Option[SignupSetting] = {
+    val query = OqlBuilder.from(classOf[SignupSetting], "c")
+    query.where("c.endAt is null or :now between c.beginAt and c.endAt", Instant.now)
+    entityDao.search(query).headOption
+  }
+
+  override def editSetting(entity: SignupInfo): Unit = {
+    put("categories", getCodes(classOf[DisciplineCategory]))
+    getSetting foreach { setting =>
+      put("institutions", setting.options.map(_.major.institution).distinct)
+      put("options", setting.options)
+      put("genders", getCodes(classOf[Gender]))
+      put("setting", setting)
+    }
+    put("project", entityDao.getAll(classOf[Project]).head)
+    super.editSetting(entity)
+  }
+
+  def download(): View = {
+    val signupInfo = entityDao.get(classOf[SignupInfo], longId("signupInfo"))
+    val bytes = DocHelper.toDoc(signupInfo)
+    val contentType = MediaTypes.get("docx", MediaTypes.ApplicationOctetStream).toString
+    Stream(new ByteArrayInputStream(bytes), contentType, signupInfo.code + "_" + signupInfo.name + "_辅修专业申请表.docx")
+  }
+
+  override def saveAndRedirect(entity: SignupInfo): View = {
+    saveOrUpdate(entity)
+    redirect("info", s"&id=${entity.id}", "info.save.success")
+  }
 
 }

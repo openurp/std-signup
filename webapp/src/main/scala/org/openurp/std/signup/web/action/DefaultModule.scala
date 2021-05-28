@@ -21,9 +21,11 @@ package org.openurp.std.signup.web.action
 import org.beangle.cdi.bind.BindModule
 
 class DefaultModule extends BindModule {
-	override protected def binding(): Unit = {
-		bind(classOf[SignupAction])
-		bind(classOf[SettingAction])
-		bind(classOf[SignupInfoAction])
-	}
+  override protected def binding(): Unit = {
+    bind(classOf[SignupAction])
+    bind(classOf[SettingAction])
+    bind(classOf[SignupInfoAction])
+    bind(classOf[MajorAction])
+    bind(classOf[OptionAction])
+  }
 }
