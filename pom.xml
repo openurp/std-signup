@@ -9,7 +9,7 @@
   <groupId>org.openurp.std.signup</groupId>
   <artifactId>openurp-std-signup-parent</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.1</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>Openurp Edu Signup Parent</name>
 
   <modules>
