@@ -4,15 +4,14 @@
   <parent>
     <groupId>org.openurp</groupId>
     <artifactId>openurp-parent</artifactId>
-    <version>0.4.13</version>
+    <version>0.4.14</version>
   </parent>
   <groupId>org.openurp.std.signup</groupId>
   <artifactId>openurp-std-signup-parent</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <name>Openurp Edu Signup Parent</name>
-  
-  
+
   <modules>
     <module>core</module>
     <module>webapp</module>
