@@ -36,11 +36,11 @@
           [/@]
         [#else]
           [@b.select name="institution.id" id="institution" label="报名院校" value=(signupInfo.firstOption.major.institution)!
-             style="width:200px;" items=institutions option="id,name" empty="..."  required="true" /]
+             style="width:200px;" items=institutions option="id,name" empty="..."  required="true" onchange="fetchOptions(this)"/]
           [@b.select name="signupInfo.firstOption.id" id="firstOption" label="第一志愿" value="${(signupInfo.firstOption.id)!}"
           style="width:200px;" items=options option=r" ${(item.major.institution.name)} ${(item.major.name)}" empty="..."  required="true"/]
           [@b.select name="signupInfo.secondOption.id" id="secondOption" label="第二志愿" value="${(signupInfo.secondOption.id)!}"
-          style="width:200px;" items=options option=r"${(item.major.institution.name)} ${(item.major.name)}" empty="..." /]
+          style="width:200px;" items=options option=r"${(item.major.institution.name)} ${(item.major.name)}" empty="..." comment="可选，如填报须和第一志愿同一院校"/]
         [/#if]
           [@b.formfoot]
               <input type="hidden" name="signupInfo.setting.id" value="${setting.id}"/>
@@ -62,7 +62,7 @@
 <script>
   beangle.load(["chosen", "bui-ajaxchosen"], function () {
     var formObj = $("form[name=signupInfoForm]");
-    formObj.find("select[name='institution.id']").children("option").click(function () {
+    function fetchOptions(ele) {
       var firstOptionObj = formObj.find("[name='signupInfo.firstOption.id']");
       firstOptionObj.empty();
       var secondOptionObj = formObj.find("[name='signupInfo.secondOption.id']");
@@ -73,7 +73,7 @@
         "url": "${b.url("signup!optionAjax")}",
         "dataType": "json",
         "data": {
-          "institutionId": $(this).val()
+          "institutionId": ele.value
         },
         "async": false,
         "success": function (data) {
@@ -93,7 +93,8 @@
           }
         }
       });
-    });
+    }
+    window.fetchOptions=fetchOptions;
   });
 
   function syncEditor() {

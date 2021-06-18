@@ -81,9 +81,10 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
   def optionAjax(): View = {
     val query = OqlBuilder.from(classOf[SignupOption], "option")
     query.orderBy("option.major.name")
-    getInt("institutionId").foreach(institutionId => {
-      query.where("option.major.institution.id=:id", institutionId)
-    })
+    getInt("institutionId") match {
+      case Some(institutionId) => query.where("option.major.institution.id=:id", institutionId)
+      case None => query.where("option.major is null")
+    }
     populateConditions(query)
     query.limit(getPageLimit)
     put("options", entityDao.search(query))
@@ -100,7 +101,12 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
     put("categories", getCodes(classOf[DisciplineCategory]))
     getSetting foreach { setting =>
       put("institutions", setting.options.map(_.major.institution).distinct)
-      put("options", setting.options)
+      if (null != entity.firstOption) {
+        val options = setting.options.filter(x => x.major.institution == entity.firstOption.major.institution)
+        put("options", options)
+      } else {
+        put("options", List.empty)
+      }
       put("genders", getCodes(classOf[Gender]))
       put("setting", setting)
     }
@@ -117,6 +123,13 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
 
   override def saveAndRedirect(entity: SignupInfo): View = {
     saveOrUpdate(entity)
+    if (entity.secondOption != null && entity.secondOption.nonEmpty) {
+      val f = entityDao.get(classOf[SignupOption], entity.firstOption.id)
+      val s = entityDao.get(classOf[SignupOption], entity.secondOption.get.id)
+      if (f.major.institution != s.major.institution) {
+        return forward("edit", "两个志愿的学校不一致")
+      }
+    }
     redirect("info", s"&id=${entity.id}", "info.save.success")
   }
 

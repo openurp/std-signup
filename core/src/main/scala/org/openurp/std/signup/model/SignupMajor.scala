@@ -27,5 +27,5 @@ import org.openurp.code.edu.model.Institution
  */
 class SignupMajor extends LongId with Named with TemporalOn {
 
-  var institution: Institution = _
+    var institution: Institution = _
 }

@@ -52,7 +52,7 @@
       <td class="content" [#if !signupInfo.secondOption??]colspan="3"[/#if]>${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.firstOption.major.name)!} </td>
     [#if signupInfo.secondOption??]
       <td class="title" >第二志愿:</td>
-      <td class="content">${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.secondOption.major.name)!}</td>
+      <td class="content">${(signupInfo.secondOption.major.institution.name)!} ${(signupInfo.secondOption.major.name)!}</td>
     </tr>
     [/#if]
   </table>
