@@ -58,7 +58,7 @@
   </table>
   <div style="text-align:center;margin-top: 20px">
       [#if downloadApplication]
-        [@b.a class="btn btn-success" href="!download?signupInfo.id=" +signupInfo.id role="button"]<i class="fas fa-download"></i>下载申请表[/@]&nbsp;
+        [@b.a class="btn btn-success" href="!download?signupInfo.id=" +signupInfo.id role="button" target="_blank"]<i class="fas fa-download"></i>下载申请表[/@]&nbsp;
       [/#if]
       [@b.a class="btn btn-primary" href="!edit?id=" +signupInfo.id role="button"]<i class="fas fa-edit"></i>修改[/@]&nbsp;
       [@b.a class="btn btn-default" href="!index" role="button"]<i class="fas fa-backward"></i>返回[/@]

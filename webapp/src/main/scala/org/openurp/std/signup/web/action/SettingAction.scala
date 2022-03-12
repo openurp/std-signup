@@ -31,10 +31,6 @@ class SettingAction extends RestfulAction[SignupSetting] with ProjectSupport {
   }
 
   override def saveAndRedirect(entity: SignupSetting): View = {
-//    entity.options.clear()
-//    val minorIds = getAll("minorId2nd", classOf[Long])
-//    entity.options ++= entityDao.findBy(classOf[SignupOption], "major.id", minorIds).toBuffer
-
     super.saveAndRedirect(entity)
   }
 
