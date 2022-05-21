@@ -22,7 +22,7 @@
   [@b.row]
     [@b.boxcol /]
     [@b.col width="8%" property="grade" title="年级"/]
-    [@b.col width="15%" property="beginAt" title="生效时间"]${(signupSetting.beginAt?string("yyyy-MM-dd HH:mm"))!}~${(signupSetting.endAt?string("yyyy-MM-dd HH:mm"))!}[/@]
+    [@b.col width="15%" property="beginAt" title="生效时间"]${(signupSetting.beginAt?string("yyyy-MM-dd HH:mm"))!}<br>${(signupSetting.endAt?string("yyyy-MM-dd HH:mm"))!}[/@]
     [@b.col title="可选辅修专业列表"]
       [#assign preSchool='--'/]
       [#list signupSetting.options?sort_by(["major","institution","name"]) as option]

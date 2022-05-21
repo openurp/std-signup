@@ -1,6 +1,6 @@
 [#ftl/]
 [@b.head/]
-<div class="container-md" style="margin-top: 100px">
+<div class="container-md" style="margin-top: 10px">
 <div class="card card-info card-outline">
  <div class="card-header">
     <i class="fas fa-school"></i>&nbsp;辅修专业报名信息</span>

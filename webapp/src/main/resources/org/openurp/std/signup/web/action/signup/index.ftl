@@ -1,6 +1,6 @@
 [#ftl]
 [@b.head/]
-<div style="text-align: center;margin-top: 200px">
+<div style="text-align: center;margin-top: 150px">
   [#if alert??]<div style="margin-bottom: 20px"><p style="color: red">未找到辅修报名信息，请报名</p></div>[/#if]
   <div style="margin-bottom: 20px;">
    <p style="font-size:20px">辅修报名信息报名与查询</p>

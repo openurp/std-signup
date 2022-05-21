@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [#if setting??]
-<div class="container-md" style="margin-top: 100px">
+<div class="container-md" style="margin-top: 10px">
 <div class="card card-info card-outline">
  <div class="card-header">
     <i class="fas fa-school"></i>&nbsp;${project.school.name} 辅修专业报名<span style="font-size:0.8em">(${setting.beginAt?string("MM-dd HH:mm")}~${(setting.endAt?string("MM-dd HH:mm"))!})</span>
@@ -50,7 +50,7 @@
       [/@]
     </div>
   [#else ]
-    <div style="text-align: center;margin-top: 200px">
+    <div style="text-align: center;margin-top: 10px">
         <p style="color: red">未到辅修报名时间</p>
         [@b.a class="btn btn-default" href="!index" role="button" style="padding: .25rem .5rem; font-size: .875rem; line-height: 1.5; border-radius: .2rem;background:none;border-color:#000;width: 60px;"]返回[/@]
     </div>
