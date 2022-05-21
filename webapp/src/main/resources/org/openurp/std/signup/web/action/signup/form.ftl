@@ -73,7 +73,8 @@
         "url": "${b.url("signup!optionAjax")}",
         "dataType": "json",
         "data": {
-          "institutionId": ele.value
+          "institutionId": ele.value,
+          "option.setting.id":'${setting.id}'
         },
         "async": false,
         "success": function (data) {
