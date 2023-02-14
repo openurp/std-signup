@@ -1,6 +1,6 @@
 [#ftl/]
 [@b.head/]
-<div class="container-md" style="margin-top: 100px">
+<div class="container-md" style="margin-top: 10px">
 <div class="card card-info card-outline">
  <div class="card-header">
     <i class="fas fa-school"></i>&nbsp;辅修专业报名信息</span>
@@ -52,13 +52,13 @@
       <td class="content" [#if !signupInfo.secondOption??]colspan="3"[/#if]>${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.firstOption.major.name)!} </td>
     [#if signupInfo.secondOption??]
       <td class="title" >第二志愿:</td>
-      <td class="content">${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.secondOption.major.name)!}</td>
+      <td class="content">${(signupInfo.secondOption.major.institution.name)!} ${(signupInfo.secondOption.major.name)!}</td>
     </tr>
     [/#if]
   </table>
   <div style="text-align:center;margin-top: 20px">
       [#if downloadApplication]
-        [@b.a class="btn btn-success" href="!download?signupInfo.id=" +signupInfo.id role="button"]<i class="fas fa-download"></i>下载申请表[/@]&nbsp;
+        [@b.a class="btn btn-success" href="!download?signupInfo.id=" +signupInfo.id role="button" target="_blank"]<i class="fas fa-download"></i>下载申请表[/@]&nbsp;
       [/#if]
       [@b.a class="btn btn-primary" href="!edit?id=" +signupInfo.id role="button"]<i class="fas fa-edit"></i>修改[/@]&nbsp;
       [@b.a class="btn btn-default" href="!index" role="button"]<i class="fas fa-backward"></i>返回[/@]

@@ -2,7 +2,7 @@
 [@b.head/]
 [@b.grid items=signupInfoes var="signupInfo"]
   [@b.gridbar]
-    bar.addItem("${b.text("action.export")}",action.exportData("code:学号,name:姓名,gender.name:性别,birthday:出生年月,idcard:身份证号,mobile:电话,address:联系地址,institution.name:学校,department:院系,major:主修专业,squad:班级,gpa:绩点,category.name:学科门类,firstOption.major.name:第一志愿,secondOption.major.name:第二志愿,firstOption.major.institution.name:专业所属院校",
+    bar.addItem("${b.text("action.export")}",action.exportData("code:学号,name:姓名,gender.name:性别,birthday:出生年月,idcard:身份证号,mobile:电话,address:联系地址,institution.name:学校,department:院系,major:主修专业,squad:班级,gpa:绩点,category.name:学科门类,firstOption.major.name:第一志愿,secondOption.major.name:第二志愿,firstOption.major.institution.name:志愿院校",
     null,'fileName=学生辅修报名信息一览表'));
     bar.addItem("删除",action.remove());
   [/@]
@@ -14,8 +14,8 @@
     [@b.col width="12%" property="department" title="院系"/]
     [@b.col width="12%" property="major" title="主修专业"/]
     [@b.col width="6%" property="gpa" title="绩点"/]
-    [@b.col width="12%" property="firstOption.major.name" title="第一志愿"]${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.firstOption.major.name)!}[/@]
-    [@b.col width="12%" property="secondOption.major.name" title="第二志愿"]${(signupInfo.secondOption.major.name)!} [/@]
+    [@b.col property="firstOption.major.name" title="第一志愿"]${(signupInfo.firstOption.major.institution.name)!} ${(signupInfo.firstOption.major.name)!}[/@]
+    [@b.col property="secondOption.major.name" title="第二志愿"]${(signupInfo.secondOption.major.name)!} [/@]
     [@b.col width="7%" property="updatedAt" title="报名时间"]${signupInfo.updatedAt?string("yy-MM-dd")}[/@]
   [/@]
 [/@]

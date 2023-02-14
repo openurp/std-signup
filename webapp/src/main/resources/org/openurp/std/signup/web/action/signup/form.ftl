@@ -1,7 +1,7 @@
 [#ftl]
 [@b.head/]
 [#if setting??]
-<div class="container-md" style="margin-top: 100px">
+<div class="container-md" style="margin-top: 10px">
 <div class="card card-info card-outline">
  <div class="card-header">
     <i class="fas fa-school"></i>&nbsp;${project.school.name} 辅修专业报名<span style="font-size:0.8em">(${setting.beginAt?string("MM-dd HH:mm")}~${(setting.endAt?string("MM-dd HH:mm"))!})</span>
@@ -36,11 +36,11 @@
           [/@]
         [#else]
           [@b.select name="institution.id" id="institution" label="报名院校" value=(signupInfo.firstOption.major.institution)!
-             style="width:200px;" items=institutions option="id,name" empty="..."  required="true" /]
+             style="width:200px;" items=institutions option="id,name" empty="..."  required="true" onchange="fetchOptions(this)"/]
           [@b.select name="signupInfo.firstOption.id" id="firstOption" label="第一志愿" value="${(signupInfo.firstOption.id)!}"
           style="width:200px;" items=options option=r" ${(item.major.institution.name)} ${(item.major.name)}" empty="..."  required="true"/]
           [@b.select name="signupInfo.secondOption.id" id="secondOption" label="第二志愿" value="${(signupInfo.secondOption.id)!}"
-          style="width:200px;" items=options option=r"${(item.major.institution.name)} ${(item.major.name)}" empty="..." /]
+          style="width:200px;" items=options option=r"${(item.major.institution.name)} ${(item.major.name)}" empty="..." comment="可选，如填报须和第一志愿同一院校"/]
         [/#if]
           [@b.formfoot]
               <input type="hidden" name="signupInfo.setting.id" value="${setting.id}"/>
@@ -50,7 +50,7 @@
       [/@]
     </div>
   [#else ]
-    <div style="text-align: center;margin-top: 200px">
+    <div style="text-align: center;margin-top: 10px">
         <p style="color: red">未到辅修报名时间</p>
         [@b.a class="btn btn-default" href="!index" role="button" style="padding: .25rem .5rem; font-size: .875rem; line-height: 1.5; border-radius: .2rem;background:none;border-color:#000;width: 60px;"]返回[/@]
     </div>
@@ -62,7 +62,7 @@
 <script>
   beangle.load(["chosen", "bui-ajaxchosen"], function () {
     var formObj = $("form[name=signupInfoForm]");
-    formObj.find("select[name='institution.id']").children("option").click(function () {
+    function fetchOptions(ele) {
       var firstOptionObj = formObj.find("[name='signupInfo.firstOption.id']");
       firstOptionObj.empty();
       var secondOptionObj = formObj.find("[name='signupInfo.secondOption.id']");
@@ -73,7 +73,8 @@
         "url": "${b.url("signup!optionAjax")}",
         "dataType": "json",
         "data": {
-          "institutionId": $(this).val()
+          "institutionId": ele.value,
+          "option.setting.id":'${setting.id}'
         },
         "async": false,
         "success": function (data) {
@@ -93,7 +94,8 @@
           }
         }
       });
-    });
+    }
+    window.fetchOptions=fetchOptions;
   });
 
   function syncEditor() {
