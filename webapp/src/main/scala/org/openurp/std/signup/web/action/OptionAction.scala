@@ -20,13 +20,16 @@ package org.openurp.std.signup.web.action
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.web.action.view.View
 import org.beangle.webmvc.support.action.RestfulAction
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.base.model.Project
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.code.edu.model.Institution
 import org.openurp.std.signup.model.{SignupMajor, SignupOption, SignupSetting}
 
 class OptionAction extends RestfulAction[SignupOption] with ProjectSupport {
 
   override def indexSetting(): Unit = {
+    given project:Project = getProject
+
     get("signupSetting.id").foreach(signupSettingId => {
       put("signupSettingId", signupSettingId)
     })

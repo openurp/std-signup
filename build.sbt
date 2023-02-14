@@ -23,9 +23,9 @@ ThisBuild / developers := List(
 ThisBuild / description := "OpenURP Std Minor Signup"
 ThisBuild / homepage := Some(url("http://openurp.github.io/std-signup/index.html"))
 
-val apiVer = "0.25.1"
-val starterVer = "0.0.20"
-val baseVer = "0.1.29"
+val apiVer = "0.31.0.Beta2"
+val starterVer = "0.2.10"
+val baseVer = "0.3.3"
 val openurp_base_api = "org.openurp.base" % "openurp-base-api" % apiVer
 val openurp_std_api = "org.openurp.std" % "openurp-std-api" % apiVer
 val openurp_stater_web = "org.openurp.starter" % "openurp-starter-web" % starterVer
@@ -44,7 +44,7 @@ lazy val core = (project in file("core"))
   )
 
 lazy val webapp = (project in file("webapp"))
-  .enablePlugins(WarPlugin,TomcatPlugin)
+  .enablePlugins(WarPlugin, TomcatPlugin)
   .settings(
     name := "openurp-std-signup-webapp",
     common

@@ -25,7 +25,7 @@ import org.beangle.webmvc.support.action.RestfulAction
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.DisciplineCategory
 import org.openurp.code.person.model.Gender
-import org.openurp.starter.edu.helper.ProjectSupport
+import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.signup.model.{SignupInfo, SignupOption, SignupSetting}
 import org.openurp.std.signup.web.helper.DocHelper
 
@@ -90,6 +90,8 @@ class SignupAction extends RestfulAction[SignupInfo] with ProjectSupport {
   }
 
   override def editSetting(entity: SignupInfo): Unit = {
+    given project:Project = getProject
+
     put("categories", getCodes(classOf[DisciplineCategory]))
     getSetting foreach { setting =>
       put("institutions", setting.options.map(_.major.institution).distinct)
