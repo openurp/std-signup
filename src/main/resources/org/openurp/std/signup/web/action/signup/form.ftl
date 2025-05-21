@@ -1,0 +1,7 @@
+[#ftl]
+[#if project.minor]
+  [#include "minorForm.ftl"/]
+[#else]
+  [#include "microForm.ftl"/]
+[/#if]
+[@b.head/]
