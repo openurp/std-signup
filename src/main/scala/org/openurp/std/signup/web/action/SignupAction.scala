@@ -19,12 +19,17 @@ package org.openurp.std.signup.web.action
 
 import jakarta.servlet.http.Part
 import org.beangle.commons.activation.MediaTypes
+import org.beangle.commons.json.{Json, JsonObject}
+import org.beangle.commons.lang.Strings
+import org.beangle.commons.net.http.HttpUtils
 import org.beangle.data.dao.OqlBuilder
 import org.beangle.ems.app.EmsApp
+import org.beangle.web.servlet.url.UrlBuilder
 import org.beangle.webmvc.annotation.{mapping, response}
 import org.beangle.webmvc.support.action.RestfulAction
 import org.beangle.webmvc.view.{Stream, View}
 import org.openurp.base.model.{Department, Project}
+import org.openurp.base.service.ProjectConfigService
 import org.openurp.code.edu.model.DisciplineCategory
 import org.openurp.code.person.model.Gender
 import org.openurp.std.signup.model.{SignupInfo, SignupMajor, SignupOption, SignupSetting}
@@ -36,6 +41,8 @@ import java.time.Instant
 /** 学生报名
  */
 class SignupAction extends RestfulAction[SignupInfo] {
+
+  var configService: ProjectConfigService = _
 
   override def indexSetting(): Unit = {
     get("alert").foreach(alert => {
@@ -77,11 +84,12 @@ class SignupAction extends RestfulAction[SignupInfo] {
   }
 
   @response
-  def userAjax(): Boolean = {
+  def check(): Boolean = {
     val id = getLong("id")
+    val settingId = getLongId("setting")
     val card = get("card").orNull
     if (card != null && card != "") {
-      val signupInfos = entityDao.findBy(classOf[SignupInfo], "idcard", List(card))
+      val signupInfos = entityDao.findBy(classOf[SignupInfo], "idcard" -> card, "setting.id" -> settingId)
       if (id.isEmpty) {
         if (signupInfos.isEmpty) false else true
       } else {
@@ -138,6 +146,7 @@ class SignupAction extends RestfulAction[SignupInfo] {
     put("genders", entityDao.getAll(classOf[Gender]))
     put("setting", setting)
     put("project", project)
+    put("queryStdEnabled", configService.get(project, "std.signup.query_std_url", "").nonEmpty)
     super.editSetting(info)
   }
 
@@ -152,7 +161,7 @@ class SignupAction extends RestfulAction[SignupInfo] {
     val signupInfo = entityDao.get(classOf[SignupInfo], getLongId("signupInfo"))
     val bytes = DocHelper.toDoc(signupInfo)
     val contentType = MediaTypes.ApplicationDocx
-    Stream(new ByteArrayInputStream(bytes), contentType, signupInfo.code + "_" + signupInfo.name + "_辅修专业申请表.docx")
+    Stream(new ByteArrayInputStream(bytes), contentType, signupInfo.code + "_" + signupInfo.name + "_专业报名表.docx")
   }
 
   override def saveAndRedirect(info: SignupInfo): View = {
@@ -163,6 +172,7 @@ class SignupAction extends RestfulAction[SignupInfo] {
     }
     getLong("firstOption.id") foreach { optionId =>
       val f = entityDao.get(classOf[SignupOption], optionId)
+      info.institution = f.major.institution
       info.updateOption(1, f)
     }
     getLong("secondOption.id") match {
@@ -188,4 +198,35 @@ class SignupAction extends RestfulAction[SignupInfo] {
     redirect("info", s"&id=${info.id}", "info.save.success")
   }
 
+  @response
+  def queryStd(): JsonObject = {
+    val code = get("code", "")
+    val idcard = get("idcard", "")
+    val setting = entityDao.get(classOf[SignupSetting], getIntId("setting"))
+    val queryStdUrl = configService.get(setting.project, "std.signup.query_std_url", "")
+    val jo = new JsonObject()
+    jo.add("success", false)
+    if (Strings.isNotBlank(code) && Strings.isNotBlank(idcard)) {
+      if (Strings.isBlank(queryStdUrl)) {
+        jo.add("msg", "missing std.signup.query_std_url value")
+      } else {
+        val url = UrlBuilder.encodeURI(Strings.replace(queryStdUrl, "{code}", code))
+        val txt = HttpUtils.getText(url).getText
+        if (Strings.isNotBlank(txt) && txt.trim() != "{}") {
+          val d = Json.parseObject(txt)
+          if (d.getString("idcard") == idcard) {
+            jo.add("data", d)
+            jo.add("success", true)
+          } else {
+            jo.add("msg", "学号和身份证号不匹配，请核对。")
+          }
+        } else {
+          jo.add("msg", "学号不存在，请核对。")
+        }
+      }
+    } else {
+      jo.add("msg", "需要学号和身份证号")
+    }
+    jo
+  }
 }

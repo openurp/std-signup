@@ -59,7 +59,10 @@ class SignupInfo extends LongId, Coded, Named, Updated {
   var fromSocial: Boolean = false
   /** 所在单位 */
   var fromOrg: Option[String] = None
-
+  /** 是否校内学生 */
+  var inside: Boolean = _
+  /** 照片路径 */
+  var photoPath: Option[String] = None
   def firstMajor: SignupMajor = {
     options.find(_.idx == 1).map(_.option.major).orNull
   }
@@ -91,9 +94,4 @@ class SignupInfo extends LongId, Coded, Named, Updated {
       options.subtractOne(i)
     }
   }
-
-  /** 是否校内学生 */
-  var inside: Boolean = _
-  /** 照片路径 */
-  var photoPath: Option[String] = None
 }

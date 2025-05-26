@@ -4,4 +4,3 @@
 [#else]
   [#include "microForm.ftl"/]
 [/#if]
-[@b.head/]

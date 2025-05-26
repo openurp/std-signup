@@ -17,12 +17,23 @@
 
 package org.openurp.std.signup.web.action
 
+import org.beangle.commons.activation.MediaTypes
+import org.beangle.commons.file.zip.Zipper
+import org.beangle.commons.io.Files
+import org.beangle.commons.lang.Strings
+import org.beangle.commons.net.http.HttpUtils
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.ems.app.EmsApp
+import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
+import org.beangle.webmvc.view.{Stream, View}
 import org.openurp.base.model.Project
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.signup.model.{SignupInfo, SignupSetting}
+import org.openurp.std.signup.web.helper.DocHelper
+
+import java.io.{ByteArrayInputStream, File}
 
 /** 报名记录管理
  */
@@ -37,6 +48,67 @@ class SignupInfoAction extends RestfulAction[SignupInfo], ProjectSupport, Export
     super.indexSetting()
   }
 
+  @mapping(value = "{id}")
+  override def info(id: String): View = {
+    val info = entityDao.get(classOf[SignupInfo], id.toLong)
+    info.photoPath foreach { p =>
+      val blob = EmsApp.getBlobRepository(true)
+      put("photoUrl", blob.url(p).get.toString)
+    }
+
+    put("downloadApplication", DocHelper.getApplicationFile.nonEmpty)
+    super.info(id)
+  }
+
+  def download(): View = {
+    val signupInfo = entityDao.get(classOf[SignupInfo], getLongId("signupInfo"))
+    val bytes = DocHelper.toDoc(signupInfo)
+    val contentType = MediaTypes.ApplicationDocx
+    Stream(new ByteArrayInputStream(bytes), contentType, signupInfo.code + "_" + signupInfo.name + "_专业报名表.docx")
+  }
+
+  /** 批量下载照片
+   *
+   * @return
+   */
+  def downloadPhotos(): View = {
+    val setting = entityDao.get(classOf[SignupSetting], getIntId("signupInfo.setting"))
+    val blob = EmsApp.getBlobRepository(true)
+
+    val q = OqlBuilder.from(classOf[SignupInfo], "signupInfo")
+    populateConditions(q)
+//    q.where("signupInfo.setting=:setting", setting)
+    q.where("signupInfo.photoPath is not null")
+
+    val ids = getLongIds("signupInfo")
+    if (ids.nonEmpty) q.where("signupInfo.id in(:ids)", ids)
+
+    val signupInfoes = entityDao.search(q)
+    val dir = new File(System.getProperty("java.io.tmpdir") + s"setting${setting.id}" + Files./ + "batch")
+    dir.mkdirs()
+    var photoCount = 0
+    signupInfoes foreach { si =>
+      val fileName = si.idcard + " " + purify(si.name) + "." + Strings.substringAfterLast(si.photoPath.get, ".")
+      val photoFile = new File(dir.getAbsolutePath + Files./ + fileName)
+      val url = blob.url(si.photoPath.get).get
+      HttpUtils.download(url.openConnection(), photoFile)
+      photoCount += 1
+    }
+
+    val targetZip = new File(System.getProperty("java.io.tmpdir") + s"setting${setting.id}" + Files./ + "batch.zip")
+    Zipper.zip(dir, targetZip)
+    val fileName =
+      if (photoCount == 1) {
+        setting.name + "_" + signupInfoes.head.name + s"的照片.zip"
+      } else {
+        setting.name + "_" + signupInfoes.head.name + s"等${photoCount}照片.zip"
+      }
+    Stream(targetZip, MediaTypes.ApplicationZip, fileName).cleanup(() =>
+      targetZip.delete()
+      Files.travel(dir, f => f.delete())
+    )
+  }
+
   override protected def getQueryBuilder: OqlBuilder[SignupInfo] = {
     val q = super.getQueryBuilder
     val project: Project = getProject
@@ -44,4 +116,13 @@ class SignupInfoAction extends RestfulAction[SignupInfo], ProjectSupport, Export
     q
   }
 
+  private def purify(name: String): String = {
+    var n = Strings.replace(name, "（", "(")
+    if (n.contains("(")) {
+      n = Strings.substringBefore(n, "(")
+    }
+    n = Strings.replace(n, ")", "")
+    n = Strings.replace(n, ".", "")
+    n
+  }
 }
