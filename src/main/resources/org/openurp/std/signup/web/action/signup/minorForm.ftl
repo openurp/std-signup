@@ -44,6 +44,7 @@
         [/#if]
           [@b.formfoot]
               <input type="hidden" name="signupInfo.setting.id" value="${setting.id}"/>
+              <input type="hidden" name="signupInfo.inside" value="1"/>
               [@b.reset/]&nbsp;&nbsp;[@b.submit value="action.submit" /]&nbsp;&nbsp;
               [@b.a class="btn btn-default" href="!index" role="button" style="padding: .25rem .5rem; font-size: .875rem; line-height: 1.5; border-radius: .2rem;background:none;border-color:#000;width: 60px;"]返回[/@]
           [/@]

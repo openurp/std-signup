@@ -113,7 +113,6 @@ class SignupAction extends RestfulAction[SignupInfo] {
       case None => query.where("option.major is null")
     }
     populateConditions(query)
-    query.limit(getPageLimit)
     put("options", entityDao.search(query))
     forward("optionsJSON")
   }
