@@ -5,11 +5,14 @@
   [@b.gridbar]
     bar.addItem("${b.text("action.export")}",action.exportData("info.code:学号,info.name:姓名,info.gender.name:性别,info.birthday:出生年月,info.idcard:身份证号,info.mobile:电话,info.address:联系地址,info.institution.name:学校,info.department:主修院系,info.major:主修专业,info.squad:班级,info.gpa:绩点,option.major.name:专业,idx:志愿",
     null,'fileName=学生报名信息一览表'));
+    bar.addItem("下载照片",action.method('downloadPhotos',null,null,'_blank'));
   [/@]
   [@b.row]
     [@b.boxcol /]
     [@b.col width="8%" property="info.code" title="学号"/]
-    [@b.col width="8%" property="info.name" title="姓名"/]
+    [@b.col width="8%" property="info.name" title="姓名"]
+      [@b.a href="!info?id=${signupInfoOption.id}"]${signupInfoOption.info.name}[/@]
+    [/@]
     [@b.col width="12%" property="info.department" title="主修院系"/]
     [@b.col width="12%" property="info.major" title="主修专业"/]
     [@b.col width="6%" property="info.gpa" title="绩点"/]

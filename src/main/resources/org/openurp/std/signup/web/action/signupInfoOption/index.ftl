@@ -4,7 +4,7 @@
 <div class="search-container">
   <div class="search-panel">
       [@b.form name="signupInfoSearchForm" action="!search" target="signupInfolist" title="ui.searchForm" theme="search"]
-          [@b.select name="signupInfoOption.info.setting.id" label="年级" items=settingList value=settingList?first required="true"/]
+          [@b.select name="signupInfoOption.info.setting.id" label="批次" items=settingList value=settingList?first required="true"/]
           [@b.textfields names="signupInfoOption.info.code;学号"/]
           [@b.textfields names="signupInfoOption.info.name;姓名"/]
           [@b.select name="signupInfoOption.info.institution.id" label="学校" items=institutions?sort_by("code") empty="..."/]

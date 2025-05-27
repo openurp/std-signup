@@ -31,7 +31,7 @@ import org.openurp.base.model.Project
 import org.openurp.code.edu.model.{DisciplineCategory, Institution}
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.signup.model.{SignupInfo, SignupSetting}
-import org.openurp.std.signup.web.helper.DocHelper
+import org.openurp.std.signup.web.helper.{DocHelper, PhotoHelper}
 
 import java.io.{ByteArrayInputStream, File}
 
@@ -73,39 +73,19 @@ class SignupInfoAction extends RestfulAction[SignupInfo], ProjectSupport, Export
    */
   def downloadPhotos(): View = {
     val setting = entityDao.get(classOf[SignupSetting], getIntId("signupInfo.setting"))
-    val blob = EmsApp.getBlobRepository(true)
 
     val q = OqlBuilder.from(classOf[SignupInfo], "signupInfo")
     populateConditions(q)
-//    q.where("signupInfo.setting=:setting", setting)
+    //    q.where("signupInfo.setting=:setting", setting)
     q.where("signupInfo.photoPath is not null")
 
     val ids = getLongIds("signupInfo")
     if (ids.nonEmpty) q.where("signupInfo.id in(:ids)", ids)
 
     val signupInfoes = entityDao.search(q)
-    val dir = new File(System.getProperty("java.io.tmpdir") + s"setting${setting.id}" + Files./ + "batch")
-    dir.mkdirs()
-    var photoCount = 0
-    signupInfoes foreach { si =>
-      val fileName = si.idcard + " " + purify(si.name) + "." + Strings.substringAfterLast(si.photoPath.get, ".")
-      val photoFile = new File(dir.getAbsolutePath + Files./ + fileName)
-      val url = blob.url(si.photoPath.get).get
-      HttpUtils.download(url.openConnection(), photoFile)
-      photoCount += 1
-    }
-
-    val targetZip = new File(System.getProperty("java.io.tmpdir") + s"setting${setting.id}" + Files./ + "batch.zip")
-    Zipper.zip(dir, targetZip)
-    val fileName =
-      if (photoCount == 1) {
-        setting.name + "_" + signupInfoes.head.name + s"的照片.zip"
-      } else {
-        setting.name + "_" + signupInfoes.head.name + s"等${photoCount}照片.zip"
-      }
-    Stream(targetZip, MediaTypes.ApplicationZip, fileName).cleanup(() =>
+    val targetZip = PhotoHelper.download(signupInfoes)
+    Stream(targetZip).cleanup(() =>
       targetZip.delete()
-      Files.travel(dir, f => f.delete())
     )
   }
 
@@ -116,13 +96,4 @@ class SignupInfoAction extends RestfulAction[SignupInfo], ProjectSupport, Export
     q
   }
 
-  private def purify(name: String): String = {
-    var n = Strings.replace(name, "（", "(")
-    if (n.contains("(")) {
-      n = Strings.substringBefore(n, "(")
-    }
-    n = Strings.replace(n, ")", "")
-    n = Strings.replace(n, ".", "")
-    n
-  }
 }

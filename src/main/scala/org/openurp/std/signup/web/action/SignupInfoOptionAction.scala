@@ -18,11 +18,15 @@
 package org.openurp.std.signup.web.action
 
 import org.beangle.data.dao.OqlBuilder
+import org.beangle.ems.app.EmsApp
+import org.beangle.webmvc.annotation.mapping
 import org.beangle.webmvc.support.action.{ExportSupport, RestfulAction}
+import org.beangle.webmvc.view.{Stream, View}
 import org.openurp.base.model.Project
-import org.openurp.code.edu.model.{DisciplineCategory, Institution}
+import org.openurp.code.edu.model.Institution
 import org.openurp.starter.web.support.ProjectSupport
 import org.openurp.std.signup.model.{SignupInfoOption, SignupSetting}
+import org.openurp.std.signup.web.helper.{DocHelper, PhotoHelper}
 
 /** 报名志愿管理
  */
@@ -45,4 +49,36 @@ class SignupInfoOptionAction extends RestfulAction[SignupInfoOption], ProjectSup
     q
   }
 
+  /** 批量下载照片
+   *
+   * @return
+   */
+  def downloadPhotos(): View = {
+    val q = OqlBuilder.from(classOf[SignupInfoOption], "signupInfoOption")
+    populateConditions(q)
+    q.where("signupInfoOption.info.photoPath is not null")
+
+    val ids = getLongIds("signupInfoOption")
+    if (ids.nonEmpty) q.where("signupInfoOption.id in(:ids)", ids)
+
+    val signupInfoes = entityDao.search(q).map(_.info).toSet
+    val targetZip = PhotoHelper.download(signupInfoes)
+    Stream(targetZip).cleanup(() =>
+      targetZip.delete()
+    )
+  }
+
+  @mapping(value = "{id}")
+  override def info(id: String): View = {
+    val option = entityDao.get(classOf[SignupInfoOption], id.toLong)
+    val info = option.info
+    info.photoPath foreach { p =>
+      val blob = EmsApp.getBlobRepository(true)
+      put("photoUrl", blob.url(p).get.toString)
+    }
+
+    put("signupInfo", info)
+    put("downloadApplication", DocHelper.getApplicationFile.nonEmpty)
+    super.info(id)
+  }
 }
