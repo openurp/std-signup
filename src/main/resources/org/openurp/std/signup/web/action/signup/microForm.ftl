@@ -61,7 +61,7 @@
             [@b.select name="secondOption.id" id="secondOption" label="专业二" value="${(secondOption.id)!}"
                        style="width:200px;" items=options option=r"${(item.major.institution.name)} ${(item.major.name)}" empty="..."/]
           [/#if]
-            [@b.file name="photoImg" required="true" extensions="jpg" label="照片" comment="480*640，蓝底，不超过40kb" maxSize="40K"/]
+            [@b.file name="photoImg" required="true" extensions="jpg" label="微专业证书照片" comment="480*640，蓝底，不超过40kb" maxSize="40K"/]
             [@b.formfoot]
                 <input type="hidden" name="signupInfo.setting.id" value="${setting.id}"/>
                 <input type="hidden" name="signupInfo.inside" value="${signupInfo.inside?c}"/>

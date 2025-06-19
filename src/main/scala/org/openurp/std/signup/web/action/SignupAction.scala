@@ -67,14 +67,21 @@ class SignupAction extends RestfulAction[SignupInfo] {
   def checkInfo(): View = {
     val q = OqlBuilder.from(classOf[SignupInfo], "s")
     q.where("s.idcard=:idcard", get("signupInfo.idcard").get.trim)
+    var conditions = 0
     get("signupInfo.name") foreach { name =>
       q.where("s.name=:name", name.trim)
+      conditions += 1
     }
     get("signupInfo.code") foreach { code =>
       q.where("s.code=:code", code.trim)
+      conditions += 1
     }
+    if (conditions == 0) {
+      q.where("s.id < 0")
+    }
+    q.orderBy("s.updatedAt desc")
 
-    val signupInfos = entityDao.search(q)
+    val signupInfos = entityDao.search(q).headOption
     if (signupInfos.size != 1) {
       val indexName = if get("signupInfo.name").nonEmpty then "microIndex" else "index"
       redirect(indexName, s"&alert=" + true, null)

@@ -39,8 +39,6 @@ class SignupInfo extends LongId, Coded, Named, Updated {
   var idcard: String = _
   /** 电话 */
   var mobile: String = _
-  /** 学校 */
-  var institution: Institution = _
   /** 院系 */
   var department: String = _
   /** 主修专业 */
@@ -53,6 +51,8 @@ class SignupInfo extends LongId, Coded, Named, Updated {
   var gpa: Option[Float] = None
   /** 学科门类 */
   var category: Option[DisciplineCategory] = None
+  /** 学校 */
+  var institution: Institution = _
   /** 报名志愿 */
   var options: mutable.Buffer[SignupInfoOption] = Collections.newBuffer[SignupInfoOption]
   /** 是否社会学院 */
