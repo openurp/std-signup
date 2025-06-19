@@ -1,0 +1,1 @@
+[#include "../signupInfo/info.ftl"/]

@@ -1,0 +1,23 @@
+[#ftl]
+[@b.head/]
+[@b.grid items=signupInfoes var="signupInfo"]
+  [@b.gridbar]
+    bar.addItem("${b.text("action.export")}",action.exportData("code:学号,name:姓名,gender.name:性别,birthday:出生年月,idcard:身份证号,mobile:电话,address:联系地址,fromSocial:是否社会学员,fromOrg:所在高校/单位,institution.name:学校,department:院系,major:主修专业,squad:班级,gpa:绩点,category.name:学科门类,firstMajor.name:专业一,secondMajor.name:专业二,firstMajor.institution.name:志愿院校",
+    null,'fileName=学生报名信息一览表'));
+    bar.addItem("删除",action.remove());
+    bar.addItem("下载照片",action.method('downloadPhotos',null,null,'_blank'));
+  [/@]
+  [@b.row]
+    [@b.boxcol /]
+    [@b.col width="8%" property="code" title="学号"/]
+    [@b.col width="8%" property="name" title="姓名"][@b.a href="!info?id=${signupInfo.id}"]${signupInfo.name}[/@][/@]
+    [@b.col width="12%" property="department" title="主修院系"/]
+    [@b.col width="13%" property="major" title="主修专业"/]
+    [@b.col width="6%" property="gpa" title="绩点"/]
+    [@b.col width="13%" property="institution.name" title="学校"/]
+    [@b.col title="专业一" width="15%"]${(signupInfo.firstMajor.name)!}[/@]
+    [@b.col title="专业二"]${(signupInfo.secondMajor.name)!} [/@]
+    [@b.col width="6%" property="updatedAt" title="报名时间"]${signupInfo.updatedAt?string("MM-dd")}[/@]
+  [/@]
+[/@]
+[@b.foot/]
