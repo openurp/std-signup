@@ -29,7 +29,7 @@ import java.net.URL
 
 object DocHelper {
   def getApplicationFile: Option[URL] = {
-    val url = Networks.url(s"${Ems.api}/platform/config/files/${EmsApp.name}/org/opnurp/std/signup/application.docx")
+    val url = Networks.url(s"${Ems.api}/platform/config/files/${EmsApp.name}/org/openurp/std/signup/application.docx")
     val status = HttpUtils.access(url)
     if (status.isOk) {
       Some(url)
